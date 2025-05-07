@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Home.css';
 import Navbar from '../../components/Navbar/Navbar.jsx';
 import hero_banner from '../../assets/hero_banner.jpg';
@@ -9,26 +9,71 @@ import TitleCards from '../../components/Cards/TitleCards.jsx';
 import Footer from '../../components/Footer/Footer.jsx';
 
 const Home = () => {
+  // For background trailer effect
+  const [muteTrailer, setMuteTrailer] = useState(true);
+  
+  // Add random featured content on load
+  const [featuredContent, setFeaturedContent] = useState(null);
+  const API_KEY = "69fe7e7c2285737216fe772c489555ad";
+  
+  useEffect(() => {
+    // Fetch trending content to feature at the top
+    fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.results && data.results.length > 0) {
+          // Get a random trending item to feature
+          const randomIndex = Math.floor(Math.random() * Math.min(5, data.results.length));
+          setFeaturedContent(data.results[randomIndex]);
+        }
+      })
+      .catch(err => console.error("Error fetching featured content:", err));
+  }, []);
+
   return (
-    <div className='home'>
+    <div className='home'  >
       <Navbar />
       <div className="hero">
-        <img src={hero_banner} alt="" className='banner-img' />
+        {/* Using a better gradient for the hero image */}
+        <img 
+          src={featuredContent ? 
+            `https://image.tmdb.org/t/p/original${featuredContent.backdrop_path}` : 
+            hero_banner
+          } 
+          alt="" 
+          className='banner-img' 
+        />
         <div className="hero-caption">
-          <img src={hero_title} alt="" className='caption-img' />
-          <p>Discovering his ties to a secret ancient order, a young man living in modern Istanbul embarks on a quest to save the city from an immortal enemy.</p>
+          {featuredContent ? (
+            <h1 className="featured-title">{featuredContent.title || featuredContent.name}</h1>
+          ) : (
+            <img src={hero_title} alt="" className='caption-img' />
+          )}
+          <p>{featuredContent ? 
+              featuredContent.overview : 
+              "Discovering his ties to a secret ancient order, a young man living in modern Istanbul embarks on a quest to save the city from an immortal enemy."
+          }</p>
           <div className="hero-btns">
-            <button className='btn'><img src={play_icon} alt="" />Play</button>
-            <button className='btn dark-btn'><img src={info_icon} alt="" />More Info</button>
-          </div>  
-          <TitleCards />
+            <button className='btn play-btn'>
+              <img src={play_icon} alt="" />Play
+            </button>
+            <button className='btn info-btn'>
+              <img src={info_icon} alt="" />More Info
+            </button>
+          </div>
+          <div className="maturity-rating">
+            <span>TV-MA</span>
+          </div>
         </div>
       </div>
-      <div className="more-cards">
-        <TitleCards title={"Blockbuster Movies"} category={"top_rated"} />
-        <TitleCards title={"Only on Netflix"} category={"now_playing"} />
-        <TitleCards title={"Upcoming"} category={"upcoming"} />
-        <TitleCards title={"Top Pics for You"} category={"popular"} />
+      
+      <div className="browse-container">
+        <TitleCards title={"Trending Now"} category={"trending/all/week"} />
+        <TitleCards title={"Popular on Netflix"} category={"movie/popular"} />
+        <TitleCards title={"Netflix Originals"} category={"tv/top_rated"} isLarge={true} />
+        <TitleCards title={"Top Rated Movies"} category={"movie/top_rated"} />
+        <TitleCards title={"Action Movies"} category={"discover/movie"} params={"with_genres=28"} />
+        <TitleCards title={"Comedy Movies"} category={"discover/movie"} params={"with_genres=35"} />
       </div>
       <Footer />
     </div>

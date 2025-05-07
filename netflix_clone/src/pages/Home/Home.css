@@ -1,13 +1,18 @@
+
+.home {
+    background-color: #000;
+    color: #fff;
+    min-height: 100vh;
+  }
+  
 .hero {
     position: relative;
-    background-color: #000; /* 🔥 Black background for the entire hero section */
-    color: #fff; /* Make text visible on black */
 }
 
 .banner-img {
     width: 100%;
     mask-image: linear-gradient(to right, transparent, black 75%);
-    -webkit-mask-image: linear-gradient(to right, transparent, black 75%);
+    -weblit-mask-image: linear-gradient(to right, transparent, black 75%);
 }
 
 .hero-caption {
@@ -15,8 +20,6 @@
     width: 100%;
     padding-left: 6%;
     bottom: 0;
-    color: #fff; /* Ensures text stays visible */
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent); /* Optional: black fade for readability */
 }
 
 .caption-img {

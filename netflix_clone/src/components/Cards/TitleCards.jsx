@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 import './TitleCards.css';
 import { Link } from 'react-router-dom';
 
-const TitleCards = ({ title, category }) => {
+const TitleCards = ({ title, category, params }) => {
   const [apiData, setApiData] = useState([]);
   const API_KEY = "69fe7e7c2285737216fe772c489555ad";
+
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`)
+    const categoryUrl = `https://api.themoviedb.org/3/${category}?api_key=${API_KEY}&language=en-US&page=1${params ? `&${params}` : ''}`;
+    fetch(categoryUrl)
       .then(res => res.json())
       .then(res => setApiData(res.results))
       .catch(err => console.error(err));
-  }, [category]);
+  }, [category, params]);
 
   return (
     <div className='title-cards'>
