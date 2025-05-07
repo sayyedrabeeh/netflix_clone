@@ -5,11 +5,13 @@ import search_icon from '../../assets/search_icon.svg';
 import bell_icon from '../../assets/bell_icon.svg';
 import profile_img from '../../assets/profile_img.png';
 import caret_icon from '../../assets/caret_icon.svg';
-import { logout } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase"
 
 const Navbar = () => {
   const navRef = useRef();
-
+  const navigate = useNavigate(); 
   useEffect(() => {
     window.addEventListener('scroll', () => {
       if (window.scrollY >= 80) {
@@ -19,6 +21,17 @@ const Navbar = () => {
       }
     });
   }, []);
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      console.log("User signed out");
+      navigate('/');
+    } catch (error) {
+      console.error("Logout failed", error);
+      throw error;
+    }
+  };
 
   return (
     <div ref={navRef} className='navbar'>

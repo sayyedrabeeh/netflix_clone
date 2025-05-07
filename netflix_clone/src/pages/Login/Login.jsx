@@ -4,6 +4,8 @@ import logo from '../../assets/logo.png';
 import netflix_spinner from '../../assets/netflix_spinner.gif';
 import { login, signup } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
   const [signState, setSignState] = useState("Sign In");
@@ -13,76 +15,110 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  const validateInputs = () => {
+    if (signState === "Sign Up" && name.trim().length < 3) {
+      toast.warning('Name must be at least 3 characters');
+      return false;
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      toast.warning('Please enter a valid email address');
+      return false;
+    }
+    if (password.length < 6) {
+      toast.warning('Password must be at least 6 characters');
+      return false;
+    }
+    return true;
+  };
+
   const user_auth = async (event) => {
     event.preventDefault();
+    if (!validateInputs()) return;
+
     setLoading(true);
     try {
       if (signState === "Sign In") {
         await login(email, password);
+        toast.success('Signed in successfully!');
       } else {
         await signup(name, email, password);
+        toast.success('Account created successfully!');
       }
-      navigate("/Home");  
+      navigate("/Home");
     } catch (err) {
-      alert("Authentication failed. Please check your credentials.");
       console.error(err);
+      toast.error(err.message || 'Authentication failed.');
     }
     setLoading(false);
   };
 
   return (
-    loading ? (
-      <div className="login-spinner">
-        <img src={netflix_spinner} alt="loading" />
-      </div>
-    ) : (
-      <div className="login">
-        <img src={logo} className="login-logo" alt="Netflix Logo" />
-        <div className="login-form">
-          <h1>{signState}</h1>
-          <form onSubmit={user_auth}>
-            {signState === "Sign Up" && (
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                type="text"
-                placeholder="Your Name"
-                required
-              />
-            )}
-            <input
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-              placeholder="Email"
-              required
+    <>
+                 <ToastContainer
+              position="top-right"   
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={true}
+              closeOnClick
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
             />
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              type="password"
-              placeholder="Password"
-              required
-            />
-            <button type="submit">{signState}</button>
-            <div className="form-help">
-              <div className="remember">
-                <input type="checkbox" />
-                <label>Remember Me</label>
-              </div>
-              <p>Need Help?</p>
-            </div>
-          </form>
-          <div className="form-switch">
-            {signState === "Sign In" ? (
-              <p>New to Netflix? <span onClick={() => setSignState("Sign Up")}>Sign Up Now</span></p>
-            ) : (
-              <p>Already have an account? <span onClick={() => setSignState("Sign In")}>Sign In Now</span></p>
-            )}
+      {
+        loading ? (
+          <div className="login-spinner">
+            <img src={netflix_spinner} alt="loading" />
           </div>
-        </div>
-      </div>
-    )
+        ) : (
+          <div className="login">
+            <img src={logo} className="login-logo" alt="Netflix Logo" />
+            <div className="login-form">
+              <h1>{signState}</h1>
+              <form onSubmit={user_auth}>
+                {signState === "Sign Up" && (
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    type="text"
+                    placeholder="Your Name"
+                    required
+                  />
+                )}
+                <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  type="email"
+                  placeholder="Email"
+                  required
+                />
+                <input
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  type="password"
+                  placeholder="Password"
+                  required
+                />
+                <button type="submit">{signState}</button>
+                <div className="form-help">
+                  <div className="remember">
+                    <input type="checkbox" />
+                    <label>Remember Me</label>
+                  </div>
+                  <p>Need Help?</p>
+                </div>
+              </form>
+              <div className="form-switch">
+                {signState === "Sign In" ? (
+                  <p>New to Netflix? <span onClick={() => setSignState("Sign Up")}>Sign Up Now</span></p>
+                ) : (
+                  <p>Already have an account? <span onClick={() => setSignState("Sign In")}>Sign In Now</span></p>
+                )}
+              </div>
+            </div>
+          </div>
+        )
+      }
+    </>
   );
 };
 
