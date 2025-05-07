@@ -22,7 +22,7 @@ const Login = () => {
       } else {
         await signup(name, email, password);
       }
-      navigate("/");  
+      navigate("/Home");  
     } catch (err) {
       alert("Authentication failed. Please check your credentials.");
       console.error(err);

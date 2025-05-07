@@ -4,15 +4,9 @@ import { Link } from 'react-router-dom';
 
 const TitleCards = ({ title, category }) => {
   const [apiData, setApiData] = useState([]);
-
+  const API_KEY = "69fe7e7c2285737216fe772c489555ad";
   useEffect(() => {
-    fetch(`https://api.themoviedb.org/3/movie/${category || 'now_playing'}?language=en-US&page=1`, {
-      method: 'GET',
-      headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer YOUR_API_KEY',
-      }
-    })
+    fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`)
       .then(res => res.json())
       .then(res => setApiData(res.results))
       .catch(err => console.error(err));
