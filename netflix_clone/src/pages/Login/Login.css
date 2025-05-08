@@ -123,8 +123,8 @@
     font-size: 0.9rem;
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-    background-color: #141414 !important; /* Ensures dark background */
-    color: #e5e5e5 !important; /* Ensures light text */
+    background-color: #141414 !important;  
+    color: #e5e5e5 !important;  
     margin-bottom: 12px;
     padding: 14px 16px;
     min-height: auto;

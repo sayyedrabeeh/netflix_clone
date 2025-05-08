@@ -9,20 +9,20 @@ import TitleCards from '../../components/Cards/TitleCards.jsx';
 import Footer from '../../components/Footer/Footer.jsx';
 
 const Home = () => {
-  // For background trailer effect
+   
   const [muteTrailer, setMuteTrailer] = useState(true);
   
-  // Add random featured content on load
+  
   const [featuredContent, setFeaturedContent] = useState(null);
   const API_KEY = "69fe7e7c2285737216fe772c489555ad";
   
   useEffect(() => {
-    // Fetch trending content to feature at the top
+     
     fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`)
       .then(res => res.json())
       .then(data => {
         if (data.results && data.results.length > 0) {
-          // Get a random trending item to feature
+           
           const randomIndex = Math.floor(Math.random() * Math.min(5, data.results.length));
           setFeaturedContent(data.results[randomIndex]);
         }
@@ -34,7 +34,7 @@ const Home = () => {
     <div className='home'  >
       <Navbar />
       <div className="hero">
-        {/* Using a better gradient for the hero image */}
+       
         <img 
           src={featuredContent ? 
             `https://image.tmdb.org/t/p/original${featuredContent.backdrop_path}` : 

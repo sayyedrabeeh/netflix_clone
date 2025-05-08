@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import './Login.css';
 import logo from '../../assets/logo.png';
 import netflix_spinner from '../../assets/netflix_spinner.gif';
@@ -6,6 +6,7 @@ import { login, signup } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { auth } from "../../firebase"
 
 const Login = () => {
   const [signState, setSignState] = useState("Sign In");
@@ -51,7 +52,14 @@ const Login = () => {
     }
     setLoading(false);
   };
-
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigate('/home', { replace: true });  
+      }
+    });
+    return unsubscribe;
+  }, [navigate]);
   return (
     <>
                  <ToastContainer

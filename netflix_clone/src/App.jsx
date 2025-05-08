@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Login from './pages/Login/Login'; 
 import Home from './pages/Home/Home'; 
 import Player from './pages/player/Player'; 
+import ProtectedRoute from './components/ProtectedRoute';
  
 
 function App() {
@@ -10,8 +11,15 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/Home" element={<Home />} />
-        <Route path="/player/:id" element={<Player />} />
+        <Route
+         path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+      <Route path="/player/:id" element={<Player />} />
          
       </Routes>
     </Router>
