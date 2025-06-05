@@ -47,8 +47,20 @@ const Login = () => {
       }
       navigate("/Home");
     } catch (err) {
-      console.error(err);
-      toast.error(err.message || 'Authentication failed.');
+       console.error(err);
+
+      let message = 'An error occurred. Please try again.';
+
+      if (err?.response?.status === 401) {
+        message = 'Invalid credentials. Please check your email and password.';
+      } else if (err?.response?.status === 500) {
+        message = 'Server error. Please try again later.';
+      } else if (err?.message) {
+        message = err.message;
+      }
+
+      toast.error(message);
+      setLoading(false);
     }
     setLoading(false);
   };
