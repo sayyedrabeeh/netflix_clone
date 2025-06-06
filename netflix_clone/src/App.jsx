@@ -16,10 +16,11 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+              <Route path="/player/:id" element={<Player />} />
             </ProtectedRoute>
           }
         />
-      <Route path="/player/:id" element={<Player />} />
+      
          
       </Routes>
     </Router>
