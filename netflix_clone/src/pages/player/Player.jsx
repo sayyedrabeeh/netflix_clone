@@ -3,51 +3,77 @@ import './Player.css';
 import back_arrow from '../../assets/back_arrow_icon.png';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const Player = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [apiData, setApiData] = useState(null);
+const OMDB_API_KEY = '35ae4b66';   
+const YOUTUBE_API_KEY = 'AIzaSyB4AdK1r-WEfrOHGR1YZ5DDB0U1U6ewlGM';  
 
+const Player = () => {
+  const { id } = useParams();  
+  const navigate = useNavigate();
+  const [movieData, setMovieData] = useState(null);
+  const [trailerKey, setTrailerKey] = useState(null);
+ 
   useEffect(() => {
-    const fetchTrailer = async () => {
+    const fetchMovieDetails = async () => {
       try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/movie/${id}/videos?language=en-US&api_key=69fe7e7c2285737216fe772c489555ad`
-        );
-        const data = await response.json();
-        const trailer = data.results?.find(
-          video => video.type === 'Trailer' && video.site === 'YouTube'
-        );
-        setApiData(trailer || data.results?.[0]);
-      } catch (err) {
-        console.error('Failed to fetch trailer:', err);
+        const res = await fetch(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}&plot=full`);
+        const data = await res.json();
+        setMovieData(data);
+
+        if (data.Title) {
+           
+          fetchYouTubeTrailer(data.Title, data.Year);
+        }
+      } catch (error) {
+        console.error('Failed to fetch movie details:', error);
       }
     };
 
-    fetchTrailer();
+    const fetchYouTubeTrailer = async (title, year) => {
+      try {
+        
+        const query = encodeURIComponent(`${title} ${year} trailer`);
+        const youtubeRes = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&q=${query}&key=${YOUTUBE_API_KEY}&maxResults=1&type=video`);
+        const youtubeData = await youtubeRes.json();
+        const videoId = youtubeData.items?.[0]?.id?.videoId;
+        setTrailerKey(videoId || null);
+      } catch (error) {
+        console.error('Failed to fetch YouTube trailer:', error);
+      }
+    };
+
+    fetchMovieDetails();
   }, [id]);
 
   return (
     <div className='player'>
-      <img src={back_arrow} alt="Back" onClick={() => navigate(-1)} />
-      {apiData ? (
+      <img src={back_arrow} alt="Back" onClick={() => navigate(-1)} style={{ cursor: 'pointer' }} />
+      
+      {movieData ? (
         <>
-          <iframe
-            width='90%'
-            height='90%'
-            src={`https://www.youtube.com/embed/${apiData.key}`}
-            title={apiData.name}
-            frameBorder='0'
-            allowFullScreen
-          ></iframe>
+          <h2>{movieData.Title} ({movieData.Year})</h2>
+          <p>{movieData.Plot}</p>
+
+          {trailerKey ? (
+            <iframe
+              width="90%"
+              height="500px"
+              src={`https://www.youtube.com/embed/${trailerKey}`}
+              title={`${movieData.Title} Trailer`}
+              frameBorder="0"
+              allowFullScreen
+            />
+          ) : (
+            <p>Trailer not found.</p>
+          )}
+
           <div className="player-info">
-            <p>{apiData.published_at?.slice(0, 10) || 'Unknown date'}</p>
-            <p>{apiData.name}</p>
-            <p>{apiData.type}</p>
+            <p>Released: {movieData.Released}</p>
+            <p>Genre: {movieData.Genre}</p>
+            <p>IMDB Rating: {movieData.imdbRating}</p>
           </div>
         </>
       ) : (
-        <p>Loading trailer...</p>
+        <p>Loading movie details...</p>
       )}
     </div>
   );

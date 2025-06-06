@@ -13,6 +13,7 @@
     width: 100%;
     mask-image: linear-gradient(to right, transparent, black 75%);
     -weblit-mask-image: linear-gradient(to right, transparent, black 75%);
+    height: 666px
 }
 
 .hero-caption {
@@ -115,3 +116,11 @@
     transform: scale(1.05);
   }
   
+ .caption-img {
+  width: 100%;
+  max-width: 600px;
+  height: 300px; /* fixed height */
+  object-fit: cover; /* fills container, crops overflow */
+  display: block;
+  margin: 0 auto;
+}

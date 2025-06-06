@@ -2,28 +2,45 @@ import React, { useEffect, useState } from 'react';
 import './TitleCards.css';
 import { Link } from 'react-router-dom';
 
-const TitleCards = ({ title, category, params }) => {
+const TitleCards = ({ title, searchQuery }) => {
   const [apiData, setApiData] = useState([]);
-  const API_KEY = "69fe7e7c2285737216fe772c489555ad";
+  const API_KEY = "35ae4b66";  
 
   useEffect(() => {
-    const categoryUrl = `https://api.themoviedb.org/3/${category}?api_key=${API_KEY}&language=en-US&page=1${params ? `&${params}` : ''}`;
-    fetch(categoryUrl)
+    if (!searchQuery) return;
+
+    const url = `https://www.omdbapi.com/?apikey=${API_KEY}&s=${encodeURIComponent(searchQuery)}&type=movie`;
+
+    fetch(url)
       .then(res => res.json())
-      .then(res => setApiData(res.results))
+      .then(data => {
+        if (data.Search) {
+          setApiData(data.Search);
+        } else {
+          setApiData([]);
+          console.error("No results found or error:", data.Error);
+        }
+      })
       .catch(err => console.error(err));
-  }, [category, params]);
+  }, [searchQuery]);
 
   return (
     <div className='title-cards'>
-      <h2>{title || "Popular on Netflix"}</h2>
+      <h2>{title || "Movies"}</h2>
       <div className='card-list'>
-        {apiData.map((card, index) => (
-          <Link to={`/player/${card.id}`} className='card' key={index}>
-            <img src={`https://image.tmdb.org/t/p/w500${card.backdrop_path}`} alt={card.original_title} />
-            <p>{card.original_title}</p>
-          </Link>
-        ))}
+        {apiData.length > 0 ? (
+          apiData.map((movie, index) => (
+            <Link to={`/player/${movie.imdbID}`} className='card' key={index}>
+              <img
+                src={movie.Poster !== "N/A" ? movie.Poster : "https://via.placeholder.com/300x170?text=No+Image"}
+                alt={movie.Title}
+              />
+              <p>{movie.Title}</p>
+            </Link>
+          ))
+        ) : (
+          <p>No movies found.</p>
+        )}
       </div>
     </div>
   );

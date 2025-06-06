@@ -5,52 +5,46 @@ import hero_banner from '../../assets/hero_banner.jpg';
 import hero_title from '../../assets/hero_title.png';
 import play_icon from '../../assets/play_icon.png';
 import info_icon from '../../assets/info_icon.png';
-import TitleCards from '../../components/Cards/TitleCards.jsx';
+import TitleCards from '../../components/Cards/TitleCards.jsx';  
 import Footer from '../../components/Footer/Footer.jsx';
 
 const Home = () => {
-   
-  const [muteTrailer, setMuteTrailer] = useState(true);
-  
-  
   const [featuredContent, setFeaturedContent] = useState(null);
-  const API_KEY = "69fe7e7c2285737216fe772c489555ad";
-  
+  const API_KEY = "35ae4b66";  
+
   useEffect(() => {
-     
-    fetch(`https://api.themoviedb.org/3/trending/all/day?api_key=${API_KEY}`)
+    
+    fetch(`https://www.omdbapi.com/?apikey=${API_KEY}&s=Avengers&type=movie`)
       .then(res => res.json())
       .then(data => {
-        if (data.results && data.results.length > 0) {
-           
-          const randomIndex = Math.floor(Math.random() * Math.min(5, data.results.length));
-          setFeaturedContent(data.results[randomIndex]);
+        if (data.Search && data.Search.length > 0) {
+          const randomIndex = Math.floor(Math.random() * data.Search.length);
+          setFeaturedContent(data.Search[randomIndex]);
         }
       })
       .catch(err => console.error("Error fetching featured content:", err));
   }, []);
 
   return (
-    <div className='home'  >
+    <div className='home'>
       <Navbar />
       <div className="hero">
-       
         <img 
           src={featuredContent ? 
-            `https://image.tmdb.org/t/p/original${featuredContent.backdrop_path}` : 
+            (featuredContent.Poster !== "N/A" ? featuredContent.Poster : hero_banner) : 
             hero_banner
           } 
-          alt="" 
+          alt={featuredContent ? featuredContent.Title : "Hero Banner"} 
           className='banner-img' 
         />
         <div className="hero-caption">
           {featuredContent ? (
-            <h1 className="featured-title">{featuredContent.title || featuredContent.name}</h1>
+            <h1 className="featured-title">{featuredContent.Title}</h1>
           ) : (
             <img src={hero_title} alt="" className='caption-img' />
           )}
           <p>{featuredContent ? 
-              featuredContent.overview : 
+              `Released in ${featuredContent.Year}` : 
               "Discovering his ties to a secret ancient order, a young man living in modern Istanbul embarks on a quest to save the city from an immortal enemy."
           }</p>
           <div className="hero-btns">
@@ -68,13 +62,14 @@ const Home = () => {
       </div>
       
       <div className="browse-container">
-        <TitleCards title={"Trending Now"} category={"trending/all/week"} />
-        <TitleCards title={"Popular on Netflix"} category={"movie/popular"} />
-        <TitleCards title={"Netflix Originals"} category={"tv/top_rated"} isLarge={true} />
-        <TitleCards title={"Top Rated Movies"} category={"movie/top_rated"} />
-        <TitleCards title={"Action Movies"} category={"discover/movie"} params={"with_genres=28"} />
-        <TitleCards title={"Comedy Movies"} category={"discover/movie"} params={"with_genres=35"} />
-      </div>
+        
+        <TitleCards title="Action Movies" searchQuery="action" />
+        <TitleCards title="Comedy Movies" searchQuery="comedy" />
+        <TitleCards title="Batman Movies" searchQuery="batman" />
+        <TitleCards title="Drama Movies" searchQuery="Drama" />
+        <TitleCards title="Avengers" searchQuery="Avengers" />
+        <TitleCards title="Superman Movies" searchQuery="superman" />
+       </div>
       <Footer />
     </div>
   );
