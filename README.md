@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Netflix Clone Banner](https://i.imgur.com/8hCvwVq.png)
+![Netflix Clone Banner](banner.png)
 
 [![Live Demo](https://img.shields.io/badge/demo-online-success.svg)](https://netflix-clone-v042.onrender.com)
 [![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
@@ -19,7 +19,7 @@
 ##  About The Project
 
 <div align="center">
-  <img src="" alt="Netflix Clone Preview" width="800">
+  <img src="about.png" alt="Netflix Clone Preview" width="800">
 </div>
 
 This Netflix clone is a modern, responsive web application that replicates the core features and user interface of Netflix. Built with cutting-edge technologies like React and Vite, it provides a seamless streaming platform experience with real movie data fetched from external APIs.
@@ -27,7 +27,7 @@ This Netflix clone is a modern, responsive web application that replicates the c
 ---
 
 <div align="center">
-  <img src="" alt="Browse Movies" width="700">
+  <img src="browse.png" alt="Browse Movies" width="700">
 </div>
 
 ####  Movie Browsing
@@ -39,7 +39,7 @@ This Netflix clone is a modern, responsive web application that replicates the c
 ####  Video Player
 
 <div align="center">
-  <img src="" alt="Video Player" width="700">
+  <img src="video.png" alt="Video Player" width="700">
 </div>
 
 - **Trailer Playback**: Watch official trailers directly in the app
@@ -49,23 +49,7 @@ This Netflix clone is a modern, responsive web application that replicates the c
  
 
  
-####  Responsive Design
-
-<div align="center">
-  <img src="" alt="Responsive Design" width="700">
-</div>
-
-- **Mobile-First Approach**: Optimized for all screen sizes
-- **Touch Gestures**: Swipe navigation on mobile devices
-- **Adaptive Layouts**: Dynamic layout adjustments based on viewport
-- **Performance**: Optimized images and lazy loading for faster load times
-
-####  Modern Interface
-- **Netflix-Inspired Design**: Authentic Netflix look and feel
-- **Smooth Animations**: Fluid transitions and micro-interactions
-- **Custom Scrollbars**: Styled scrollbars matching Netflix's aesthetic
-- **Loading States**: Elegant skeleton screens and spinners
-
+ 
  
 ### APIs & Services
 ![TMDB](https://img.shields.io/badge/TMDB-01D277?style=for-the-badge&logo=themoviedatabase&logoColor=white)
